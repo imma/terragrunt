@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+function bootstrap {
+  local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
+  source "$shome/script/profile"
+
+  case "$(uname -s)" in
+    Darwin)
+      local fnm_terragrunt="terragrunt_darwin_amd64"
+      ;;
+    Linux)
+      local fnm_terragrunt="terragrunt_linux_amd64"
+      ;;
+  esac
+
+  local url_terragrunt="https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/$fnm_terragrunt"
+
+  cache curl "$fnm_terragrunt-${TERRAGRUNT_VERSION}" "$url_terragrunt"
+
+  mkdir -p "$shome/vendor"
+
+  rsync -ia "${BASEBOX_CACHE}/curl/$fnm_terragrunt-${TERRAGRUNT_VERSION}" "$shome/vendor/"
+  chmod 755 "$shome/vendor/$fnm_terragrunt-${TERRAGRUNT_VERSION}"
+  ln -nfs "../vendor/$fnm_terragrunt-${TERRAGRUNT_VERSION}" "$shome/bin/terragrunt"
+}
+
+bootstrap

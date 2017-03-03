@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+function _terragrunt_profile {
+  local shome="${_terragrunt_home:-"$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"}"
+  PATH="$shome/bin:$PATH"
+
+  TERRAGRUNT_VERSION='0.11.0'
+}
+
+_terragrunt_profile
